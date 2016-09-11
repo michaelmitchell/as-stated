@@ -20,5 +20,7 @@ This project adheres to [Semantic Versioning](http://semver.org/)
 
 ### Added
 - Initial work from patmos project
+- Unit tests
+- Code coverage
 
 [Unreleased]: https://github.com/michaelmitchell/as-stated/compare/d926269b63d59b398ad479475ac1028a85e94ff0...HEAD
