@@ -32,7 +32,7 @@ function factory(targetFn, options) {
 
     // support for curried functions
     if (typeof newState === "function") {
-      return factory(newState, options).bind(this);
+      return factory(newState, options).bind(scope);
     }
 
     if (options && options.reducer === true) {
@@ -40,7 +40,7 @@ function factory(targetFn, options) {
     }
 
     if (options && options.chain === true) {
-      return scope;
+      return this;
     }
     else {
       return newState;
@@ -62,7 +62,7 @@ function privateFactory(targetFn, options) {
 
     // support for curried functions
     if (typeof result === "function") {
-      return privateFactory(result).bind(this);
+      return privateFactory(result, options).bind(this);
     }
 
     if (options && options.chain === true) {
@@ -185,31 +185,6 @@ function sideEffect(targetFn) {
 }
 
 /**
- * chainEffect
- * @param  {function} targetFn
- * @return {function} outterFn
- */
-function chainEffect(targetFn) {
-  var curriedFn = R.curry(targetFn);
-
-  var outterFn = function () {
-    if (this && this instanceof this.constructor) {
-      var method = R.partial(curriedFn, [this.state]);
-      var innerFn = factory(method, { chain: true, sideEffect: true });
-
-      return innerFn.apply(this, arguments);
-    }
-    else {
-      throw Error(SIDE_EFFECT_ERROR);
-    }
-  };
-
-  outterFn.test = targetFn;
-
-  return outterFn;
-}
-
-/**
  * reducer
  * @param  {function} targetFn
  * @return {function} outterFn
@@ -256,7 +231,7 @@ function chainReducer(targetFn) {
       return innerFn.apply(this, arguments);
     }
     else {
-      innerFn = privateFactory(curriedFn);
+      innerFn = privateFactory(curriedFn, { chain: true });
 
       return innerFn.apply(this, arguments);
     }
@@ -289,7 +264,6 @@ module.exports = {
 
   //
   sideEffect: sideEffect,
-  chainEffect: chainEffect,
 
   //
   reducer: reducer,

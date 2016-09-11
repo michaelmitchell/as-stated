@@ -13,18 +13,22 @@ TestClass.prototype.methodReturnsParam = as.method << function (state, x) {
   return x;
 }
 
-TestClass.prototype.methodReturnsVoid = as.method << function (state) {
+TestClass.prototype.methodReturnsDoesNothing = as.method << function (state) {
   // does nothing
 }
 
-TestClass.prototype.methodTryChangeState = as.method << function (state, x) {
-  const newState = Object.assign({}, state, {
-    changed: true
+TestClass.prototype.methodTryReduceState = as.method << function (state, x) {
+  return Object.assign({}, state, {
+    result: x
   });
+}
 
-  this.changed = true;
+TestClass.prototype.methodTrySideEfect = as.method << function (state, x) {
+  this.changed = x;
+}
 
-  return newState;
+TestClass.prototype.chainMethodReturnsParam = as.chainMethod << function (state, x) {
+  return x;
 }
 
 //
@@ -32,14 +36,14 @@ TestClass.prototype.chainMethodDoesNothing = as.chainMethod << function (state, 
   //
 }
 
-TestClass.prototype.chainMethodTryChangeState = as.chainMethod << function (state, x) {
-  const newState = Object.assign({}, state, {
-    changed: true
+TestClass.prototype.chainMethodTryReduceState = as.chainMethod << function (state, x) {
+  return Object.assign({}, state, {
+    result: x
   });
+}
 
-  this.changed = true;
-
-  return newState;
+TestClass.prototype.chainMethodTrySideEffect = as.chainMethod << function (state, x) {
+  this.changed = x;
 }
 
 //
@@ -47,19 +51,58 @@ TestClass.prototype.privateMethodReturnsParam = as.privateMethod << function (st
   return x;
 }
 
-TestClass.prototype.privateMethodTryChangeState = as.privateMethod << function (state, x) {
-  const newState = Object.assign({}, state, {
-    changed: true
-  });
-
-  this.changed = true;
-
-  return newState;
+TestClass.prototype.privateMethodTrySideEffect = as.privateMethod << function (state, x) {
+  this.changed = x;
 }
 
 TestClass.prototype.sideEffectReturnsParam = as.sideEffect << function (state, x) {
   return x;
 }
 
+TestClass.prototype.sideEffectReturnsTwoParams = as.sideEffect << function (state, x, y) {
+  return [x, y];
+}
+
+TestClass.prototype.sideEffectTrySideEffect  = as.sideEffect << function (state, x) {
+  this.changed = x;
+}
+
+//
+TestClass.prototype.reducerReturnsParam = as.reducer << function (state, x) {
+  return x;
+}
+
+TestClass.prototype.reducerReturnsDoesNothing = as.reducer << function (state) {
+  // does nothing
+}
+
+TestClass.prototype.reducerTryReduceState = as.reducer << function (state, x) {
+  return Object.assign({}, state, {
+    result: x
+  });
+}
+
+//
+TestClass.prototype.reducerTrySideEfect = as.chainReducer << function (state, x) {
+  this.changed = x;
+}
+
+TestClass.prototype.chainReducerReturnsParam = as.chainReducer << function (state, x) {
+  return x;
+}
+
+TestClass.prototype.chainReducerReturnsDoesNothing = as.chainReducer << function (state) {
+  // does nothing
+}
+
+TestClass.prototype.chainReducerTryReduceState = as.chainReducer << function (state, x) {
+  return Object.assign({}, state, {
+    result: x
+  });
+}
+
+TestClass.prototype.chainReducerTrySideEfect = as.reducer << function (state, x) {
+  this.changed = x;
+}
 
 export default TestClass;
